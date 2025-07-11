@@ -1,4 +1,6 @@
 {
   "version": 2,
-  "framework": "nextjs"
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false
 } 
