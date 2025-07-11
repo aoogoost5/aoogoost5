@@ -1,0 +1,46 @@
+/* 全局样式 */
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  min-height: 100vh;
+  width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 确保表单和分析结果正确显示 */
+.chakra-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* 确保内容区域占满空间 */
+#__next {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 修复可能的溢出问题 */
+.overflow-fix {
+  overflow: visible !important;
+}
+
+/* 确保移动设备上的响应式布局 */
+@media (max-width: 768px) {
+  .chakra-container {
+    padding: 0.5rem;
+  }
+} 
