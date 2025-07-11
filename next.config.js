@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  basePath: '',
-  assetPrefix: '',
-  trailingSlash: false,
-  images: {
-    domains: ['vercel.com'],
-  }
+  swcMinify: true,
+  // 指定页面目录
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 }
 
 module.exports = nextConfig 
