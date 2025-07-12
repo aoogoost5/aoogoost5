@@ -1,17 +1,9 @@
 {
   "version": 2,
-  "public": true,
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
   "cleanUrls": true,
   "trailingSlash": false,
-  "builds": [
-    { 
-      "src": "package.json", 
-      "use": "@vercel/next",
-      "config": {
-        "srcDir": "src"
-      }
-    }
-  ],
   "routes": [
     { "src": "/styles/(.*)", "dest": "/styles/$1" },
     { "src": "/(.*)", "dest": "/$1" }
