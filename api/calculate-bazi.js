@@ -1,5 +1,5 @@
-// Vercel API端点 - 八字计算
-import { Lunar } from 'lunar-javascript';
+// Vercel API端点 - 八字计算 (CommonJS语法)
+const { Lunar } = require('lunar-javascript');
 
 // 天干地支对应的五行
 const WUXING_MAP = {
@@ -26,7 +26,28 @@ const HIDDEN_STEMS = {
   亥: [{ stem: '壬', strength: 5 }, { stem: '甲', strength: 5 }]
 };
 
-export default async function handler(req, res) {
+// 超级简单的性别调整函数
+function adjustByGender(strength, gender) {
+  console.log('调整前:', JSON.stringify(strength));
+  console.log('性别:', gender);
+  
+  const result = {...strength}; // 创建副本避免修改原对象
+  
+  if (gender === '男') {
+    result.木 = result.木 * 1.1;
+    result.火 = result.火 * 1.1;
+    console.log('男性调整: 木火增强10%');
+  } else if (gender === '女') {
+    result.金 = result.金 * 1.1;
+    result.水 = result.水 * 1.1;
+    console.log('女性调整: 金水增强10%');
+  }
+  
+  console.log('调整后:', JSON.stringify(result));
+  return result;
+}
+
+module.exports = async (req, res) => {
   // 设置CORS头
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -86,7 +107,7 @@ export default async function handler(req, res) {
       const timeStem = timeGZ.substring(0, 1);
       const timeBranch = timeGZ.substring(1, 2);
       
-      // 计算五行强度 - 简化版本
+      // 计算五行强度 - 超级简化版本
       let strength = {
         木: 0, 火: 0, 土: 0, 金: 0, 水: 0
       };
@@ -108,21 +129,8 @@ export default async function handler(req, res) {
         });
       });
       
-      // 性别调整 - 直接赋值而不是乘法
-      console.log('调整前五行:', JSON.stringify(strength));
-      console.log('性别:', gender);
-      
-      if (gender === '男') {
-        strength.木 = strength.木 + (strength.木 * 0.1);
-        strength.火 = strength.火 + (strength.火 * 0.1);
-        console.log('男性调整: 木火增强10%');
-      } else if (gender === '女') {
-        strength.金 = strength.金 + (strength.金 * 0.1);
-        strength.水 = strength.水 + (strength.水 * 0.1);
-        console.log('女性调整: 金水增强10%');
-      }
-      
-      console.log('调整后五行:', JSON.stringify(strength));
+      // 性别调整 - 使用独立函数
+      strength = adjustByGender(strength, gender);
       
       // 分析五行状态
       const total = Object.values(strength).reduce((a, b) => a + b, 0);
@@ -180,7 +188,7 @@ export default async function handler(req, res) {
         status,
         suggestions,
         lunarInfo,
-        version: 'v1.2.0-vercel',
+        version: 'v1.3.0-vercel',
         platform: 'Vercel API',
         gender: gender,
         debug: {
@@ -197,4 +205,4 @@ export default async function handler(req, res) {
     console.error('API错误:', error);
     return res.status(500).json({ error: error.message || '八字计算失败，请稍后再试' });
   }
-} 
+}; 

@@ -212,14 +212,17 @@ export default function Home() {
               <Box mt={8} p={6} bg="gray.50" borderRadius="md">
                 <Heading as="h3" size="md" mb={4} color="blue.600">分析结果</Heading>
                 
-                {/* 添加版本信息显示 */}
-                {result.version && (
-                  <Box mb={4} textAlign="right">
-                    <Text fontSize="xs" color="gray.500">
-                      版本: {result.version} | 平台: {result.platform || '未知'}
+                {/* 添加版本信息显示 - 更明显的位置和样式 */}
+                <Box mb={4} p={2} bg="blue.50" borderRadius="md" borderWidth="1px" borderColor="blue.200">
+                  <Text fontSize="sm" fontWeight="bold" color="blue.700">
+                    API信息: {result.version || '未知版本'} | {result.platform || '未知平台'} | 性别: {result.gender || '未知'}
+                  </Text>
+                  {result.debug && (
+                    <Text fontSize="xs" color="blue.600" mt={1}>
+                      调试: {JSON.stringify(result.debug)}
                     </Text>
-                  </Box>
-                )}
+                  )}
+                </Box>
                 
                 <Box mb={4}>
                   <Heading as="h4" size="sm" mb={2}>您的八字：</Heading>
