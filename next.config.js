@@ -2,8 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // 指定页面目录
+  // 明确指定页面目录为src/pages
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  // 指定页面目录路径
+  dir: 'src',
   // 用于Netlify部署的配置
   images: {
     unoptimized: true,
