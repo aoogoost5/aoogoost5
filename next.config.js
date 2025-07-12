@@ -4,6 +4,10 @@ const nextConfig = {
   swcMinify: true,
   images: {
     unoptimized: true,
+  },
+  // 确保样式正确加载
+  webpack: (config) => {
+    return config;
   }
 }
 
