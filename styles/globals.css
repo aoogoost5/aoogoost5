@@ -1,46 +1,59 @@
-/* 全局样式 */
-html,
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --wood-color: #4CAF50;
+  --fire-color: #F44336;
+  --earth-color: #795548;
+  --metal-color: #9E9E9E;
+  --water-color: #2196F3;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  min-height: 100vh;
-  width: 100%;
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.hidden {
+  display: none;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* 添加响应式媒体查询 */
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 14px; /* 小屏幕降低字体大小 */
+    padding: 0 10px; /* 减少边距 */
+  }
 
-/* 确保表单和分析结果正确显示 */
-.chakra-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
+  .container {
+    padding: 0 10px; /* 移动端容器边距 */
+  }
 
-/* 确保内容区域占满空间 */
-#__next {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  main {
+    padding: 1rem 0; /* 减少内边距 */
+    width: 100%;
+    max-width: 100%; /* 移动端全宽 */
+  }
 
-/* 修复可能的溢出问题 */
-.overflow-fix {
-  overflow: visible !important;
-}
+  .grid, .products-grid {
+    grid-template-columns: 1fr; /* 移动端单列布局 */
+    gap: 1rem;
+  }
 
-/* 确保移动设备上的响应式布局 */
-@media (max-width: 768px) {
-  .chakra-container {
-    padding: 0.5rem;
+  .card, .product-card {
+    margin: 0.5rem 0; /* 调整卡片间距 */
   }
 } 

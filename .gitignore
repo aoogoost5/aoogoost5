@@ -38,3 +38,6 @@ next-env.d.ts
 # 冗余目录
 /aoogoost5
 /5Elements
+
+# Local Netlify folder
+.netlify

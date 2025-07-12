@@ -54,7 +54,26 @@ npm run dev
 
 ## 部署
 
+### Vercel部署
 项目使用Vercel进行部署，每次推送到主分支会自动触发部署。
+
+### Netlify部署
+项目也支持通过Netlify部署，详细说明请参考[Netlify部署指南](./NETLIFY-DEPLOY.md)。
+
+1. 使用Netlify CLI部署:
+```bash
+# 安装Netlify CLI
+npm install -g netlify-cli
+
+# 登录Netlify
+netlify login
+
+# 初始化项目
+netlify init
+
+# 部署
+netlify deploy --prod
+```
 
 ## 许可证
 
