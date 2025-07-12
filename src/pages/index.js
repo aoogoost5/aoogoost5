@@ -23,7 +23,7 @@ import { FaYinYang, FaStore, FaChartPie } from 'react-icons/fa';
 import NextLink from 'next/link';
 import ElementsIntro from '../components/ElementsIntro';
 import ElementEnergy from '../components/ElementEnergy';
-import baziService from '../services/bazi.service';
+import axios from 'axios';
 
 export default function Home() {
   const [birthDate, setBirthDate] = useState('');
@@ -31,9 +31,10 @@ export default function Home() {
   const [gender, setGender] = useState('男');
   const [unknownTime, setUnknownTime] = useState(false);
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // 简单的验证
@@ -48,41 +49,38 @@ export default function Home() {
     }
     
     try {
-      // 使用八字服务计算结果
-      const date = new Date(birthDate);
-      if (unknownTime) {
-        date.setHours(12, 0, 0); // 默认中午12点
-      } else if (birthTime) {
-        const [hours, minutes] = birthTime.split(':').map(Number);
-        date.setHours(hours, minutes, 0);
-      }
+      setLoading(true);
       
-      const bazi = baziService.calculateBazi(date, gender);
-      const strength = baziService.calculateWuxingStrength(bazi);
-      const status = baziService.analyzeWuxingStatus(strength);
-      const suggestions = baziService.generateSuggestions(status, gender);
-      
-      // 格式化结果
-      setResult({
-        bazi: {
-          year: `${bazi.year.heavenlyStem}${bazi.year.earthlyBranch}`,
-          month: `${bazi.month.heavenlyStem}${bazi.month.earthlyBranch}`,
-          day: `${bazi.day.heavenlyStem}${bazi.day.earthlyBranch}`,
-          hour: unknownTime ? '未知' : `${bazi.hour.heavenlyStem}${bazi.hour.earthlyBranch}`
-        },
-        gender: gender,
-        wuxing: strength,
-        wuxingStatus: status,
-        analysis: suggestions.join('。') || '您的五行较为平衡，请继续保持。'
+      // 调用API端点
+      const response = await axios.post('/api/calculate-bazi', {
+        birthDate,
+        birthTime,
+        gender,
+        unknownTime
       });
+      
+      setResult(response.data);
+      
+      // 如果有节日信息，显示祝福
+      if (response.data.lunar && response.data.lunar.festival) {
+        toast({
+          title: "今天是特殊日子",
+          description: `农历：${response.data.lunar.year}年${response.data.lunar.month}月${response.data.lunar.day}日，${response.data.lunar.festival}`,
+          status: "info",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       toast({
         title: "计算错误",
-        description: error.message,
+        description: error.response?.data?.message || error.message,
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -192,6 +190,8 @@ export default function Home() {
                     type="submit" 
                     colorScheme="blue" 
                     flex="1"
+                    isLoading={loading}
+                    loadingText="计算中..."
                   >
                     计算
                   </Button>
@@ -237,6 +237,31 @@ export default function Home() {
                     </Box>
                   </HStack>
                 </Box>
+                
+                {/* 添加农历信息显示 */}
+                {result.lunar && (
+                  <Box mb={4}>
+                    <Heading as="h4" size="sm" mb={2}>农历信息：</Heading>
+                    <HStack spacing={4} bg="white" p={3} borderRadius="md">
+                      <Box textAlign="center">
+                        <Text fontSize="xs" color="gray.500">农历年</Text>
+                        <Text fontWeight="bold">{result.lunar.year}</Text>
+                      </Box>
+                      <Box textAlign="center">
+                        <Text fontSize="xs" color="gray.500">农历月</Text>
+                        <Text fontWeight="bold">{result.lunar.month}</Text>
+                      </Box>
+                      <Box textAlign="center">
+                        <Text fontSize="xs" color="gray.500">农历日</Text>
+                        <Text fontWeight="bold">{result.lunar.day}</Text>
+                      </Box>
+                      <Box textAlign="center">
+                        <Text fontSize="xs" color="gray.500">生肖</Text>
+                        <Text fontWeight="bold">{result.lunar.zodiac}</Text>
+                      </Box>
+                    </HStack>
+                  </Box>
+                )}
                 
                 <Divider my={4} />
                 
