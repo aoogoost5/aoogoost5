@@ -8,9 +8,7 @@ const nextConfig = {
   // 确保样式正确加载
   webpack: (config) => {
     return config;
-  },
-  // 支持Netlify部署
-  target: process.env.NETLIFY ? 'serverless' : undefined
+  }
 }
 
 module.exports = nextConfig 
