@@ -8,6 +8,15 @@ const nextConfig = {
   // 确保样式正确加载
   webpack: (config) => {
     return config;
+  },
+  // 确保API路由正确处理
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: '/api/:path*'
+      }
+    ];
   }
 }
 

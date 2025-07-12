@@ -3,20 +3,17 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "16"
-  NPM_VERSION = "8"
-  NEXT_TELEMETRY_DISABLED = "1"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[build.processing]
-  skip_processing = false
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
 
-[build.processing.css]
-  bundle = true
-  minify = true
-
-[build.processing.js]
-  bundle = true
-  minify = true 
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200 

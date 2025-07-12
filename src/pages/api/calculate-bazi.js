@@ -120,93 +120,131 @@ function generateSuggestions(status, gender = '男') {
 }
 
 export default function handler(req, res) {
+  console.log('API调用开始:', new Date().toISOString());
+  console.log('请求方法:', req.method);
+  console.log('请求体:', req.body);
+  
   // 只允许POST请求
   if (req.method !== 'POST') {
+    console.log('非POST请求被拒绝');
     res.status(405).json({ message: '只允许POST请求' });
     return;
   }
 
   try {
-    const { birthDate, birthTime, gender, unknownTime } = req.body;
+    const { birthDate, birthTime, gender } = req.body;
+    console.log('解析的参数:', { birthDate, birthTime, gender });
     
     if (!birthDate) {
+      console.log('缺少出生日期');
       res.status(400).json({ message: '出生日期不能为空' });
       return;
     }
 
     // 解析日期和时间
-    const date = new Date(birthDate);
-    if (unknownTime) {
-      date.setHours(12, 0, 0); // 默认中午12点
-    } else if (birthTime) {
-      const [hours, minutes] = birthTime.split(':').map(Number);
-      date.setHours(hours, minutes, 0);
+    const dateTime = birthTime ? `${birthDate}T${birthTime}` : birthDate;
+    const date = new Date(dateTime);
+    console.log('解析的日期时间:', dateTime, '转换后的Date对象:', date);
+    
+    try {
+      // 使用lunar-javascript库计算农历日期
+      console.log('开始计算农历日期');
+      const solar = Solar.fromDate(date);
+      const lunar = Lunar.fromSolar(solar);
+      console.log('农历计算成功:', lunar);
+      
+      // 获取八字信息 - 修复这里的代码
+      const yearGZ = lunar.getYearInGanZhi();
+      const monthGZ = lunar.getMonthInGanZhi();
+      const dayGZ = lunar.getDayInGanZhi();
+      const timeGZ = lunar.getTimeInGanZhi();
+      
+      console.log('八字信息:', { yearGZ, monthGZ, dayGZ, timeGZ });
+      
+      // 解析天干地支
+      const yearStem = yearGZ.substring(0, 1);
+      const yearBranch = yearGZ.substring(1, 2);
+      const monthStem = monthGZ.substring(0, 1);
+      const monthBranch = monthGZ.substring(1, 2);
+      const dayStem = dayGZ.substring(0, 1);
+      const dayBranch = dayGZ.substring(1, 2);
+      const timeStem = timeGZ.substring(0, 1);
+      const timeBranch = timeGZ.substring(1, 2);
+      
+      // 构建八字对象
+      const bazi = {
+        year: {
+          heavenlyStem: yearStem,
+          earthlyBranch: yearBranch,
+          hiddenElements: getHiddenElements(yearBranch)
+        },
+        month: {
+          heavenlyStem: monthStem,
+          earthlyBranch: monthBranch,
+          hiddenElements: getHiddenElements(monthBranch)
+        },
+        day: {
+          heavenlyStem: dayStem,
+          earthlyBranch: dayBranch,
+          hiddenElements: getHiddenElements(dayBranch)
+        },
+        hour: {
+          heavenlyStem: timeStem,
+          earthlyBranch: timeBranch,
+          hiddenElements: getHiddenElements(timeBranch)
+        },
+        gender
+      };
+      
+      console.log('构建的八字对象:', bazi);
+      
+      // 获取农历信息
+      const lunarInfo = {
+        year: lunar.getYear(),
+        month: lunar.getMonth(),
+        day: lunar.getDay(),
+        yearInGanZhi: yearGZ,
+        monthInGanZhi: monthGZ,
+        dayInGanZhi: dayGZ,
+        timeInGanZhi: timeGZ,
+        festivals: lunar.getFestivals()
+      };
+      console.log('农历信息:', lunarInfo);
+      
+      // 计算五行强度
+      console.log('开始计算五行强度');
+      const strength = calculateWuxingStrength(bazi);
+      console.log('五行强度计算结果:', strength);
+      
+      // 分析五行状态
+      console.log('开始分析五行状态');
+      const status = analyzeWuxingStatus(strength);
+      console.log('五行状态分析结果:', status);
+      
+      // 生成建议
+      console.log('开始生成建议');
+      const suggestions = generateSuggestions(status, gender);
+      console.log('建议生成结果:', suggestions);
+
+      console.log('API调用成功完成');
+      res.status(200).json({
+        bazi: {
+          year: `${yearStem}${yearBranch}`,
+          month: `${monthStem}${monthBranch}`,
+          day: `${dayStem}${dayBranch}`,
+          hour: `${timeStem}${timeBranch}`
+        },
+        strength,
+        status,
+        suggestions,
+        lunarInfo
+      });
+    } catch (lunarError) {
+      console.error('农历计算错误:', lunarError);
+      throw new Error(`农历计算失败: ${lunarError.message}`);
     }
-
-    // 使用lunar-javascript库计算八字
-    const solar = Solar.fromDate(date);
-    const lunar = Lunar.fromSolar(solar);
-    const eightChar = lunar.getEightChar();
-    
-    // 获取年、月、日、时柱
-    const bazi = {
-      year: {
-        heavenlyStem: eightChar.getYear().getGan(),
-        earthlyBranch: eightChar.getYear().getZhi(),
-        hiddenElements: getHiddenElements(eightChar.getYear().getZhi())
-      },
-      month: {
-        heavenlyStem: eightChar.getMonth().getGan(),
-        earthlyBranch: eightChar.getMonth().getZhi(),
-        hiddenElements: getHiddenElements(eightChar.getMonth().getZhi())
-      },
-      day: {
-        heavenlyStem: eightChar.getDay().getGan(),
-        earthlyBranch: eightChar.getDay().getZhi(),
-        hiddenElements: getHiddenElements(eightChar.getDay().getZhi())
-      },
-      hour: {
-        heavenlyStem: eightChar.getTime().getGan(),
-        earthlyBranch: eightChar.getTime().getZhi(),
-        hiddenElements: getHiddenElements(eightChar.getTime().getZhi())
-      },
-      gender
-    };
-
-    // 计算五行强度
-    const strength = calculateWuxingStrength(bazi);
-    
-    // 分析五行状态
-    const status = analyzeWuxingStatus(strength);
-    
-    // 生成建议
-    const suggestions = generateSuggestions(status, gender);
-
-    // 格式化结果
-    const result = {
-      bazi: {
-        year: `${bazi.year.heavenlyStem}${bazi.year.earthlyBranch}`,
-        month: `${bazi.month.heavenlyStem}${bazi.month.earthlyBranch}`,
-        day: `${bazi.day.heavenlyStem}${bazi.day.earthlyBranch}`,
-        hour: unknownTime ? '未知' : `${bazi.hour.heavenlyStem}${bazi.hour.earthlyBranch}`
-      },
-      gender,
-      wuxing: strength,
-      wuxingStatus: status,
-      analysis: suggestions.join('。') || '您的五行较为平衡，请继续保持。',
-      // 添加农历信息
-      lunar: {
-        year: lunar.getYearInChinese(),
-        month: lunar.getMonthInChinese(),
-        day: lunar.getDayInChinese(),
-        zodiac: lunar.getYearShengXiao(),
-        festival: lunar.getFestivals().join('，')
-      }
-    };
-
-    res.status(200).json(result);
   } catch (error) {
-    console.error('八字计算错误:', error);
-    res.status(500).json({ message: '八字计算失败，请检查输入日期是否正确', error: error.message });
+    console.error('八字计算失败:', error);
+    res.status(500).json({ error: error.message || '八字计算失败，请稍后再试' });
   }
 } 

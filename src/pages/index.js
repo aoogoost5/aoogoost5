@@ -267,8 +267,8 @@ export default function Home() {
                 
                 <Box mb={4}>
                   <ElementEnergy 
-                    elementStrength={result.wuxing} 
-                    elementStatus={result.wuxingStatus} 
+                    elementStrength={result.strength} 
+                    elementStatus={result.status} 
                   />
                 </Box>
                 
@@ -276,7 +276,7 @@ export default function Home() {
                 
                 <Box>
                   <Heading as="h4" size="sm" mb={2}>分析说明：</Heading>
-                  <Text>{result.analysis}</Text>
+                  <Text>{result.suggestions ? result.suggestions.join('。') : '您的五行较为平衡，请继续保持。'}</Text>
                 </Box>
                 
                 <Divider my={4} />
