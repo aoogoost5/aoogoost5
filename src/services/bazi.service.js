@@ -2,7 +2,7 @@ import { Lunar } from 'lunar-javascript';
 
 class BaziService {
   // 计算八字
-  calculateBazi(birthDate) {
+  calculateBazi(birthDate, gender = '男') {
     try {
       // 这里是一个简化的八字计算示例
       const date = new Date(birthDate);
@@ -45,7 +45,8 @@ class BaziService {
           heavenlyStem: hourStem,
           earthlyBranch: hourBranch,
           hiddenElements: this.getHiddenElements(hourBranch)
-        }
+        },
+        gender: gender
       };
     } catch (error) {
       throw new Error('八字计算失败，请检查输入日期是否正确');
@@ -101,6 +102,17 @@ class BaziService {
       });
     });
 
+    // 根据性别调整五行强度
+    if (bazi.gender === '男') {
+      // 男性阳刚之气更强，木火相对更旺
+      strength['木'] *= 1.1;
+      strength['火'] *= 1.1;
+    } else if (bazi.gender === '女') {
+      // 女性阴柔之气更强，金水相对更旺
+      strength['金'] *= 1.1;
+      strength['水'] *= 1.1;
+    }
+
     return strength;
   }
 
@@ -128,14 +140,32 @@ class BaziService {
   }
 
   // 生成改善建议
-  generateSuggestions(status) {
+  generateSuggestions(status, gender = '男') {
     const suggestions = [];
     
     for (const [element, state] of Object.entries(status)) {
       if (state === '太旺') {
-        suggestions.push(`${element}太旺，建议: 1.避免${element}相关物品过多 2.增加克制${element}的元素`);
+        let suggestion = `${element}太旺，建议: 1.避免${element}相关物品过多 2.增加克制${element}的元素`;
+        
+        // 根据性别给出更具体的建议
+        if (gender === '男' && (element === '木' || element === '火')) {
+          suggestion += ` 3.男性${element}过旺可能导致脾气暴躁，建议多冥想平心静气`;
+        } else if (gender === '女' && (element === '金' || element === '水')) {
+          suggestion += ` 3.女性${element}过旺可能导致情绪波动，建议适当运动释放能量`;
+        }
+        
+        suggestions.push(suggestion);
       } else if (state === '太弱') {
-        suggestions.push(`${element}太弱，建议: 1.增加${element}相关物品 2.减少克制${element}的元素`);
+        let suggestion = `${element}太弱，建议: 1.增加${element}相关物品 2.减少克制${element}的元素`;
+        
+        // 根据性别给出更具体的建议
+        if (gender === '男' && (element === '金' || element === '水')) {
+          suggestion += ` 3.男性${element}不足可能影响决断力，建议佩戴${element}属性饰品增强`;
+        } else if (gender === '女' && (element === '木' || element === '火')) {
+          suggestion += ` 3.女性${element}不足可能影响创造力，建议在居室增加${element}元素`;
+        }
+        
+        suggestions.push(suggestion);
       }
     }
     

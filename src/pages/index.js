@@ -57,10 +57,10 @@ export default function Home() {
         date.setHours(hours, minutes, 0);
       }
       
-      const bazi = baziService.calculateBazi(date);
+      const bazi = baziService.calculateBazi(date, gender);
       const strength = baziService.calculateWuxingStrength(bazi);
       const status = baziService.analyzeWuxingStatus(strength);
-      const suggestions = baziService.generateSuggestions(status);
+      const suggestions = baziService.generateSuggestions(status, gender);
       
       // 格式化结果
       setResult({
@@ -70,6 +70,7 @@ export default function Home() {
           day: `${bazi.day.heavenlyStem}${bazi.day.earthlyBranch}`,
           hour: unknownTime ? '未知' : `${bazi.hour.heavenlyStem}${bazi.hour.earthlyBranch}`
         },
+        gender: gender,
         wuxing: strength,
         wuxingStatus: status,
         analysis: suggestions.join('。') || '您的五行较为平衡，请继续保持。'
@@ -214,6 +215,10 @@ export default function Home() {
                 <Box mb={4}>
                   <Heading as="h4" size="sm" mb={2}>您的八字：</Heading>
                   <HStack spacing={4} bg="white" p={3} borderRadius="md">
+                    <Box textAlign="center">
+                      <Text fontSize="xs" color="gray.500">性别</Text>
+                      <Text fontWeight="bold">{result.gender}</Text>
+                    </Box>
                     <Box textAlign="center">
                       <Text fontSize="xs" color="gray.500">年柱</Text>
                       <Text fontWeight="bold">{result.bazi.year}</Text>
