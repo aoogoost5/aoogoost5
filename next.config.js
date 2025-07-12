@@ -18,12 +18,6 @@ const nextConfig = {
       }
     ];
   },
-  // 添加静态导出配置
-  output: 'export',
-  // 禁用图片优化以便静态导出
-  images: {
-    unoptimized: true,
-  },
   // 确保路径正确
   trailingSlash: true,
 }
