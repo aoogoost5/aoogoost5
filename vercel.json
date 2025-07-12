@@ -2,13 +2,5 @@
   "version": 2,
   "buildCommand": "next build",
   "outputDirectory": ".next",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "routes": [
-    { "src": "/styles/(.*)", "dest": "/styles/$1" },
-    { "src": "/(.*)", "dest": "/$1" }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "framework": "nextjs"
 } 

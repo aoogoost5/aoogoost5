@@ -2,13 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   images: {
-    domains: [], // 如果需要外部图片源，在这里添加
-    unoptimized: true, // 确保图片在Vercel上正确显示
+    unoptimized: true,
   },
-  trailingSlash: false,
-  staticPageGenerationTimeout: 180,
+  // 确保样式正确加载
+  webpack: (config) => {
+    return config;
+  }
 }
 
 module.exports = nextConfig 
