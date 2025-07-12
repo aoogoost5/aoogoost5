@@ -121,45 +121,29 @@ function generateSuggestions(status, gender = '男') {
   return suggestions;
 }
 
-exports.handler = async function(event, context) {
+export default async function handler(req, res) {
   // 设置CORS头
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
-  };
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
   // 处理预检请求
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ message: 'Preflight call successful' })
-    };
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({ message: 'Preflight call successful' });
   }
   
   // 只允许POST请求
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: '只支持POST请求' })
-    };
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: '只支持POST请求' });
   }
 
   try {
-    const body = JSON.parse(event.body);
-    const { birthDate, birthTime, gender } = body;
+    const { birthDate, birthTime, gender } = req.body;
     
     console.log('收到请求参数:', { birthDate, birthTime, gender });
     
     if (!birthDate) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: '出生日期不能为空' })
-      };
+      return res.status(400).json({ error: '出生日期不能为空' });
     }
 
     // 解析日期时间
@@ -234,36 +218,24 @@ exports.handler = async function(event, context) {
       const suggestions = generateSuggestions(status, gender);
       console.log('建议生成结果:', suggestions);
 
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          bazi: {
-            year: `${yearStem}${yearBranch}`,
-            month: `${monthStem}${monthBranch}`,
-            day: `${dayStem}${dayBranch}`,
-            hour: `${timeStem}${timeBranch}`
-          },
-          strength,
-          status,
-          suggestions,
-          lunarInfo,
-          version: 'v1.1.0-netlify', // 添加版本标记
-          platform: 'Netlify Functions'
-        })
-      };
+      return res.status(200).json({
+        bazi: {
+          year: `${yearStem}${yearBranch}`,
+          month: `${monthStem}${monthBranch}`,
+          day: `${dayStem}${dayBranch}`,
+          hour: `${timeStem}${timeBranch}`
+        },
+        strength,
+        status,
+        suggestions,
+        lunarInfo,
+        version: 'v1.1.0-vercel', // 添加版本标记
+        platform: 'Vercel API'
+      });
     } catch (lunarError) {
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({ error: `农历计算失败: ${lunarError.message}` })
-      };
+      return res.status(500).json({ error: `农历计算失败: ${lunarError.message}` });
     }
   } catch (error) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: error.message || '八字计算失败，请稍后再试' })
-    };
+    return res.status(500).json({ error: error.message || '八字计算失败，请稍后再试' });
   }
-}; 
+} 
