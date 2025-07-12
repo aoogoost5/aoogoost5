@@ -26,25 +26,24 @@ const HIDDEN_STEMS = {
   亥: [{ stem: '壬', strength: 5 }, { stem: '甲', strength: 5 }]
 };
 
-// 超级简单的性别调整函数
+// 超级简单的性别调整函数 - 修改为直接修改对象
 function adjustByGender(strength, gender) {
   console.log('调整前:', JSON.stringify(strength));
   console.log('性别:', gender);
   
-  const result = {...strength}; // 创建副本避免修改原对象
-  
+  // 直接修改对象，确保更改生效
   if (gender === '男') {
-    result.木 = result.木 * 1.1;
-    result.火 = result.火 * 1.1;
+    strength.木 = Math.round(strength.木 * 1.1 * 100) / 100;
+    strength.火 = Math.round(strength.火 * 1.1 * 100) / 100;
     console.log('男性调整: 木火增强10%');
   } else if (gender === '女') {
-    result.金 = result.金 * 1.1;
-    result.水 = result.水 * 1.1;
+    strength.金 = Math.round(strength.金 * 1.1 * 100) / 100;
+    strength.水 = Math.round(strength.水 * 1.1 * 100) / 100;
     console.log('女性调整: 金水增强10%');
   }
   
-  console.log('调整后:', JSON.stringify(result));
-  return result;
+  console.log('调整后:', JSON.stringify(strength));
+  return strength;
 }
 
 module.exports = async (req, res) => {
@@ -67,6 +66,7 @@ module.exports = async (req, res) => {
     const { birthDate, birthTime, gender } = req.body;
     
     console.log('Vercel API收到请求:', { birthDate, birthTime, gender });
+    console.log('性别值:', gender);
     
     if (!birthDate) {
       return res.status(400).json({ error: '出生日期不能为空' });
@@ -129,8 +129,12 @@ module.exports = async (req, res) => {
         });
       });
       
-      // 性别调整 - 使用独立函数
+      console.log('性别调整前:', JSON.stringify(strength));
+      
+      // 性别调整 - 使用修改后的函数
       strength = adjustByGender(strength, gender);
+      
+      console.log('性别调整后:', JSON.stringify(strength));
       
       // 分析五行状态
       const total = Object.values(strength).reduce((a, b) => a + b, 0);
@@ -188,13 +192,14 @@ module.exports = async (req, res) => {
         status,
         suggestions,
         lunarInfo,
-        version: 'v1.3.0-vercel',
+        version: 'v1.4.0-vercel',
         platform: 'Vercel API',
         gender: gender,
         debug: {
           gender: gender,
           isMale: gender === '男',
-          isFemale: gender === '女'
+          isFemale: gender === '女',
+          timestamp: new Date().toISOString()
         }
       });
     } catch (lunarError) {

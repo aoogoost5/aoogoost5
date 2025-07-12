@@ -51,13 +51,31 @@ export default function Home() {
     try {
       setLoading(true);
       
-      // 调用Netlify Function而不是API路由
-      const response = await axios.post('/.netlify/functions/calculate-bazi', {
-        birthDate,
-        birthTime,
-        gender,
-        unknownTime
-      });
+      // 根据当前环境选择API端点
+      let response;
+      
+      // 检测是否在Vercel平台上
+      const isVercel = window.location.hostname.includes('vercel.app');
+      
+      if (isVercel) {
+        // 在Vercel平台上，使用Vercel API端点
+        response = await axios.post('/api/calculate-bazi', {
+          birthDate,
+          birthTime,
+          gender,
+          unknownTime
+        });
+        console.log('使用Vercel API端点');
+      } else {
+        // 在Netlify或其他平台上，使用Netlify Function
+        response = await axios.post('/.netlify/functions/calculate-bazi', {
+          birthDate,
+          birthTime,
+          gender,
+          unknownTime
+        });
+        console.log('使用Netlify Function');
+      }
       
       setResult(response.data);
       
@@ -214,11 +232,11 @@ export default function Home() {
                 
                 {/* 添加版本信息显示 - 更明显的位置和样式 */}
                 <Box mb={4} p={2} bg="blue.50" borderRadius="md" borderWidth="1px" borderColor="blue.200">
-                  <Text fontSize="sm" fontWeight="bold" color="blue.700">
+                  <Text fontSize="md" fontWeight="bold" color="blue.700">
                     API信息: {result.version || '未知版本'} | {result.platform || '未知平台'} | 性别: {result.gender || '未知'}
                   </Text>
                   {result.debug && (
-                    <Text fontSize="xs" color="blue.600" mt={1}>
+                    <Text fontSize="sm" color="blue.600" mt={1}>
                       调试: {JSON.stringify(result.debug)}
                     </Text>
                   )}
