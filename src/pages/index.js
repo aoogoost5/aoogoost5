@@ -51,8 +51,8 @@ export default function Home() {
     try {
       setLoading(true);
       
-      // 调用API端点
-      const response = await axios.post('/api/calculate-bazi', {
+      // 调用Netlify Function而不是API路由
+      const response = await axios.post('/.netlify/functions/calculate-bazi', {
         birthDate,
         birthTime,
         gender,
@@ -62,10 +62,10 @@ export default function Home() {
       setResult(response.data);
       
       // 如果有节日信息，显示祝福
-      if (response.data.lunar && response.data.lunar.festival) {
+      if (response.data.lunarInfo && response.data.lunarInfo.festivals && response.data.lunarInfo.festivals.length > 0) {
         toast({
           title: "今天是特殊日子",
-          description: `农历：${response.data.lunar.year}年${response.data.lunar.month}月${response.data.lunar.day}日，${response.data.lunar.festival}`,
+          description: `农历：${response.data.lunarInfo.year}年${response.data.lunarInfo.month}月${response.data.lunarInfo.day}日，${response.data.lunarInfo.festivals.join('，')}`,
           status: "info",
           duration: 5000,
           isClosable: true,
@@ -74,7 +74,7 @@ export default function Home() {
     } catch (error) {
       toast({
         title: "计算错误",
-        description: error.response?.data?.message || error.message,
+        description: error.response?.data?.error || error.message,
         status: "error",
         duration: 3000,
         isClosable: true,
@@ -239,25 +239,25 @@ export default function Home() {
                 </Box>
                 
                 {/* 添加农历信息显示 */}
-                {result.lunar && (
+                {result.lunarInfo && (
                   <Box mb={4}>
                     <Heading as="h4" size="sm" mb={2}>农历信息：</Heading>
                     <HStack spacing={4} bg="white" p={3} borderRadius="md">
                       <Box textAlign="center">
                         <Text fontSize="xs" color="gray.500">农历年</Text>
-                        <Text fontWeight="bold">{result.lunar.year}</Text>
+                        <Text fontWeight="bold">{result.lunarInfo.year}</Text>
                       </Box>
                       <Box textAlign="center">
                         <Text fontSize="xs" color="gray.500">农历月</Text>
-                        <Text fontWeight="bold">{result.lunar.month}</Text>
+                        <Text fontWeight="bold">{result.lunarInfo.month}</Text>
                       </Box>
                       <Box textAlign="center">
                         <Text fontSize="xs" color="gray.500">农历日</Text>
-                        <Text fontWeight="bold">{result.lunar.day}</Text>
+                        <Text fontWeight="bold">{result.lunarInfo.day}</Text>
                       </Box>
                       <Box textAlign="center">
                         <Text fontSize="xs" color="gray.500">生肖</Text>
-                        <Text fontWeight="bold">{result.lunar.zodiac}</Text>
+                        <Text fontWeight="bold">{result.lunarInfo.zodiac}</Text>
                       </Box>
                     </HStack>
                   </Box>
