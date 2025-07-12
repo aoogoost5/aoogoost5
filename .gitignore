@@ -26,7 +26,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
@@ -41,3 +44,10 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# backup
+/backup_pages
+
+# 子模块目录
+/5Elements/
+/aoogoost5/
