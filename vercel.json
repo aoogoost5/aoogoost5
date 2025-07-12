@@ -4,7 +4,13 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "builds": [
-    { "src": "package.json", "use": "@vercel/next" }
+    { 
+      "src": "package.json", 
+      "use": "@vercel/next",
+      "config": {
+        "srcDir": "src"
+      }
+    }
   ],
   "routes": [
     { "src": "/styles/(.*)", "dest": "/styles/$1" },
