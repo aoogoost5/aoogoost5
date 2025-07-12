@@ -1,4 +1,4 @@
-const { Lunar } = require('lunar-javascript');
+import { Lunar } from 'lunar-javascript';
 
 // 获取地支藏干
 function getHiddenElements(earthlyBranch) {
@@ -49,18 +49,21 @@ function calculateWuxingStrength(bazi) {
     });
   });
 
-  // 根据性别调整五行强度
+  // 根据性别调整五行强度 - 确保这里的代码被执行
+  console.log('性别:', bazi.gender);
   if (bazi.gender === '男') {
     // 男性阳刚之气更强，木火相对更旺
-    strength['木'] *= 1.1;
-    strength['火'] *= 1.1;
+    strength['木'] = strength['木'] * 1.1;
+    strength['火'] = strength['火'] * 1.1;
     console.log('应用男性五行调整: 木火增强10%');
   } else if (bazi.gender === '女') {
     // 女性阴柔之气更强，金水相对更旺
-    strength['金'] *= 1.1;
-    strength['水'] *= 1.1;
+    strength['金'] = strength['金'] * 1.1;
+    strength['水'] = strength['水'] * 1.1;
     console.log('应用女性五行调整: 金水增强10%');
   }
+  
+  console.log('调整后的五行强度:', strength);
 
   return strength;
 }
@@ -203,8 +206,10 @@ export default async function handler(req, res) {
           earthlyBranch: timeBranch,
           hiddenElements: getHiddenElements(timeBranch)
         },
-        gender
+        gender: gender // 确保性别被正确传递
       };
+      
+      console.log('构建的八字对象:', bazi);
       
       // 计算五行强度
       const strength = calculateWuxingStrength(bazi);
@@ -229,8 +234,9 @@ export default async function handler(req, res) {
         status,
         suggestions,
         lunarInfo,
-        version: 'v1.1.0-vercel', // 添加版本标记
-        platform: 'Vercel API'
+        version: 'v1.1.1-vercel', // 更新版本标记
+        platform: 'Vercel API',
+        gender: gender // 返回性别信息以便验证
       });
     } catch (lunarError) {
       return res.status(500).json({ error: `农历计算失败: ${lunarError.message}` });
