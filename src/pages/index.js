@@ -212,6 +212,15 @@ export default function Home() {
               <Box mt={8} p={6} bg="gray.50" borderRadius="md">
                 <Heading as="h3" size="md" mb={4} color="blue.600">分析结果</Heading>
                 
+                {/* 添加版本信息显示 */}
+                {result.version && (
+                  <Box mb={4} textAlign="right">
+                    <Text fontSize="xs" color="gray.500">
+                      版本: {result.version} | 平台: {result.platform || '未知'}
+                    </Text>
+                  </Box>
+                )}
+                
                 <Box mb={4}>
                   <Heading as="h4" size="sm" mb={2}>您的八字：</Heading>
                   <HStack spacing={4} bg="white" p={3} borderRadius="md">
