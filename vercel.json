@@ -1,5 +1,6 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "builds": [
     {
       "src": "package.json",
@@ -15,4 +16,9 @@
   "env": {
     "VERCEL_PLATFORM": "true"
   }
+=======
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "framework": "nextjs"
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
 } 

@@ -23,7 +23,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 .pnpm-debug.log*
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
 
 # local env files
 .env.local
@@ -34,6 +37,7 @@ yarn-error.log*
 # vercel
 .vercel
 
+<<<<<<< HEAD
 # typescript
 *.tsbuildinfo
 next-env.d.ts
@@ -43,11 +47,17 @@ next-env.d.ts
 /5Elements
 
 # Local Netlify folder
+=======
+# netlify
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
 .netlify
 
 # backup
 /backup_pages
+<<<<<<< HEAD
 
 # 子模块目录
 /5Elements/
 /aoogoost5/
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1

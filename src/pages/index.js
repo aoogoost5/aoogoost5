@@ -23,7 +23,11 @@ import { FaYinYang, FaStore, FaChartPie } from 'react-icons/fa';
 import NextLink from 'next/link';
 import ElementsIntro from '../components/ElementsIntro';
 import ElementEnergy from '../components/ElementEnergy';
+<<<<<<< HEAD
 import axios from 'axios';
+=======
+import baziService from '../services/bazi.service';
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
 
 export default function Home() {
   const [birthDate, setBirthDate] = useState('');
@@ -31,10 +35,16 @@ export default function Home() {
   const [gender, setGender] = useState('男');
   const [unknownTime, setUnknownTime] = useState(false);
   const [result, setResult] = useState(null);
+<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const handleSubmit = async (e) => {
+=======
+  const toast = useToast();
+
+  const handleSubmit = (e) => {
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
     e.preventDefault();
     
     // 简单的验证
@@ -49,6 +59,7 @@ export default function Home() {
     }
     
     try {
+<<<<<<< HEAD
       setLoading(true);
       
       // 根据当前环境选择API端点
@@ -93,12 +104,47 @@ export default function Home() {
       toast({
         title: "计算错误",
         description: error.response?.data?.error || error.message,
+=======
+      // 使用八字服务计算结果
+      const date = new Date(birthDate);
+      if (unknownTime) {
+        date.setHours(12, 0, 0); // 默认中午12点
+      } else if (birthTime) {
+        const [hours, minutes] = birthTime.split(':').map(Number);
+        date.setHours(hours, minutes, 0);
+      }
+      
+      const bazi = baziService.calculateBazi(date);
+      const strength = baziService.calculateWuxingStrength(bazi);
+      const status = baziService.analyzeWuxingStatus(strength);
+      const suggestions = baziService.generateSuggestions(status);
+      
+      // 格式化结果
+      setResult({
+        bazi: {
+          year: `${bazi.year.heavenlyStem}${bazi.year.earthlyBranch}`,
+          month: `${bazi.month.heavenlyStem}${bazi.month.earthlyBranch}`,
+          day: `${bazi.day.heavenlyStem}${bazi.day.earthlyBranch}`,
+          hour: unknownTime ? '未知' : `${bazi.hour.heavenlyStem}${bazi.hour.earthlyBranch}`
+        },
+        wuxing: strength,
+        wuxingStatus: status,
+        analysis: suggestions.join('。') || '您的五行较为平衡，请继续保持。'
+      });
+    } catch (error) {
+      toast({
+        title: "计算错误",
+        description: error.message,
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
         status: "error",
         duration: 3000,
         isClosable: true,
       });
+<<<<<<< HEAD
     } finally {
       setLoading(false);
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
     }
   };
 
@@ -208,8 +254,11 @@ export default function Home() {
                     type="submit" 
                     colorScheme="blue" 
                     flex="1"
+<<<<<<< HEAD
                     isLoading={loading}
                     loadingText="计算中..."
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                   >
                     计算
                   </Button>
@@ -230,6 +279,7 @@ export default function Home() {
               <Box mt={8} p={6} bg="gray.50" borderRadius="md">
                 <Heading as="h3" size="md" mb={4} color="blue.600">分析结果</Heading>
                 
+<<<<<<< HEAD
                 {/* 添加版本信息显示 - 更明显的位置和样式 */}
                 <Box mb={4} p={2} bg="blue.50" borderRadius="md" borderWidth="1px" borderColor="blue.200">
                   <Text fontSize="md" fontWeight="bold" color="blue.700">
@@ -242,14 +292,19 @@ export default function Home() {
                   )}
                 </Box>
                 
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                 <Box mb={4}>
                   <Heading as="h4" size="sm" mb={2}>您的八字：</Heading>
                   <HStack spacing={4} bg="white" p={3} borderRadius="md">
                     <Box textAlign="center">
+<<<<<<< HEAD
                       <Text fontSize="xs" color="gray.500">性别</Text>
                       <Text fontWeight="bold">{result.gender}</Text>
                     </Box>
                     <Box textAlign="center">
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                       <Text fontSize="xs" color="gray.500">年柱</Text>
                       <Text fontWeight="bold">{result.bazi.year}</Text>
                     </Box>
@@ -268,6 +323,7 @@ export default function Home() {
                   </HStack>
                 </Box>
                 
+<<<<<<< HEAD
                 {/* 添加农历信息显示 */}
                 {result.lunarInfo && (
                   <Box mb={4}>
@@ -293,12 +349,19 @@ export default function Home() {
                   </Box>
                 )}
                 
+=======
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                 <Divider my={4} />
                 
                 <Box mb={4}>
                   <ElementEnergy 
+<<<<<<< HEAD
                     elementStrength={result.strength} 
                     elementStatus={result.status} 
+=======
+                    elementStrength={result.wuxing} 
+                    elementStatus={result.wuxingStatus} 
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                   />
                 </Box>
                 
@@ -306,7 +369,11 @@ export default function Home() {
                 
                 <Box>
                   <Heading as="h4" size="sm" mb={2}>分析说明：</Heading>
+<<<<<<< HEAD
                   <Text>{result.suggestions ? result.suggestions.join('。') : '您的五行较为平衡，请继续保持。'}</Text>
+=======
+                  <Text>{result.analysis}</Text>
+>>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
                 </Box>
                 
                 <Divider my={4} />
@@ -320,9 +387,32 @@ export default function Home() {
                 </Box>
               </Box>
             )}
-          </Box>
-        </VStack>
-      </Container>
-    </>
-  );
-} 
+            
+            {/* 结果显示 */}
+            {result && (
+              <Box mt={8} p={6} bg="gray.50" borderRadius="lg" w="100%">
+                <Heading as="h3" size="md" mb={4}>您的八字五行分析结果</Heading>
+                <VStack align="stretch" spacing={4}>
+                  <Text><strong>八字：</strong> {result.bazi.year} {result.bazi.month} {result.bazi.day} {result.bazi.hour}</Text>
+                  <Text><strong>五行能量分布：</strong></Text>
+                  <ElementEnergy wuxing={result.wuxing} />
+                  <Text><strong>五行状态分析：</strong> {result.wuxingStatus}</Text>
+                  <Text><strong>平衡建议：</strong> {result.analysis}</Text>
+                </VStack>
+                <Flex justify="center" mt={6} gap={4}>
+                  <Button colorScheme="green" onClick={() => window.location.href = '/symbol'}>生成能量符号</Button>
+                  <Button colorScheme="purple" onClick={() => window.location.href = '/shop'}>进入商城</Button>
+                  <Button variant="outline" onClick={handleReset}>重新测算</Button>
+                </Flex>
+              </Box>
+            )}
+            
+            {/* 添加版本和日期 */}
+            <Box mt={8} textAlign="center" color="gray.500">
+              <Text>版本: 1.0.0 - 日期: {new Date().toLocaleDateString('zh-CN')}</Text>
+            </Box>
+          </VStack>
+        </Container>
+      </>
+    );
+}
