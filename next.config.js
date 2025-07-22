@@ -3,16 +3,11 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-<<<<<<< HEAD
-    unoptimized: true, // 确保图片在Netlify和Vercel上都能正确显示
-=======
-    unoptimized: true,
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
+    unoptimized: true // 确保图片在Netlify和Vercel上都能正确显示
   },
   // 确保样式正确加载
   webpack: (config) => {
     return config;
-<<<<<<< HEAD
   },
   // 确保API路由正确处理
   async rewrites() {
@@ -24,10 +19,7 @@ const nextConfig = {
     ];
   },
   // 确保路径正确
-  trailingSlash: true,
-=======
-  }
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
+  trailingSlash: true
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig
