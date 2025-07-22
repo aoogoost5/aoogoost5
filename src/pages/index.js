@@ -279,7 +279,6 @@ export default function Home() {
               <Box mt={8} p={6} bg="gray.50" borderRadius="md">
                 <Heading as="h3" size="md" mb={4} color="blue.600">分析结果</Heading>
                 
-<<<<<<< HEAD
                 {/* 添加版本信息显示 - 更明显的位置和样式 */}
                 <Box mb={4} p={2} bg="blue.50" borderRadius="md" borderWidth="1px" borderColor="blue.200">
                   <Text fontSize="md" fontWeight="bold" color="blue.700">
