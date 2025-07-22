@@ -31,7 +31,6 @@ const getStatusBadge = (status) => {
   }
 };
 
-<<<<<<< HEAD
 export default function ElementEnergy({ elementStrength = {}, elementStatus = {} }) {
   // 检查参数是否有效
   if (!elementStrength || Object.keys(elementStrength).length === 0) {
@@ -42,25 +41,14 @@ export default function ElementEnergy({ elementStrength = {}, elementStatus = {}
       </Box>
     );
   }
-  
-=======
-export default function ElementEnergy({ elementStrength, elementStatus }) {
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
   // 计算最大值，用于进度条比例
   const maxStrength = Math.max(...Object.values(elementStrength));
-  
   return (
     <Box>
       <Heading as="h3" size="md" mb={4}>五行能量分析</Heading>
-      
       {Object.entries(elementStrength).map(([element, strength]) => {
-<<<<<<< HEAD
         const status = elementStatus[element] || '未知';
-=======
-        const status = elementStatus[element];
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
         const statusBadge = getStatusBadge(status);
-        
         return (
           <Box key={element} mb={3}>
             <Flex justify="space-between" align="center" mb={1}>
@@ -83,4 +71,4 @@ export default function ElementEnergy({ elementStrength, elementStatus }) {
       })}
     </Box>
   );
-} 
+}
