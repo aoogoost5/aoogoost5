@@ -2,11 +2,7 @@ import { Lunar } from 'lunar-javascript';
 
 class BaziService {
   // 计算八字
-<<<<<<< HEAD
   calculateBazi(birthDate, gender = '男') {
-=======
-  calculateBazi(birthDate) {
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
     try {
       // 这里是一个简化的八字计算示例
       const date = new Date(birthDate);
@@ -49,12 +45,8 @@ class BaziService {
           heavenlyStem: hourStem,
           earthlyBranch: hourBranch,
           hiddenElements: this.getHiddenElements(hourBranch)
-<<<<<<< HEAD
         },
         gender: gender
-=======
-        }
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
       };
     } catch (error) {
       throw new Error('八字计算失败，请检查输入日期是否正确');
@@ -110,7 +102,6 @@ class BaziService {
       });
     });
 
-<<<<<<< HEAD
     // 根据性别调整五行强度
     if (bazi.gender === '男') {
       // 男性阳刚之气更强，木火相对更旺
@@ -122,8 +113,6 @@ class BaziService {
       strength['水'] *= 1.1;
     }
 
-=======
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
     return strength;
   }
 
@@ -151,16 +140,11 @@ class BaziService {
   }
 
   // 生成改善建议
-<<<<<<< HEAD
   generateSuggestions(status, gender = '男') {
-=======
-  generateSuggestions(status) {
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
     const suggestions = [];
     
     for (const [element, state] of Object.entries(status)) {
       if (state === '太旺') {
-<<<<<<< HEAD
         let suggestion = `${element}太旺，建议: 1.避免${element}相关物品过多 2.增加克制${element}的元素`;
         
         // 根据性别给出更具体的建议
@@ -182,11 +166,6 @@ class BaziService {
         }
         
         suggestions.push(suggestion);
-=======
-        suggestions.push(`${element}太旺，建议: 1.避免${element}相关物品过多 2.增加克制${element}的元素`);
-      } else if (state === '太弱') {
-        suggestions.push(`${element}太弱，建议: 1.增加${element}相关物品 2.减少克制${element}的元素`);
->>>>>>> 1af66ab390b14a1bf97a1e4da8306e198dc67bd1
       }
     }
     
@@ -194,4 +173,4 @@ class BaziService {
   }
 }
 
-export default new BaziService(); 
+export default new BaziService();
